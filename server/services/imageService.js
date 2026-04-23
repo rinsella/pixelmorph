@@ -4,6 +4,13 @@ const sharp = require('sharp');
 const heicConvert = require('heic-convert');
 const { OUTPUT_FORMATS, isHeic } = require('../utils/validation');
 
+// When several conversions run in parallel from the route layer, let sharp
+// use a single libvips thread per call so we don't oversubscribe the CPU.
+sharp.concurrency(1);
+// Bump the pixel cache so repeated decodes of similar-sized images reuse
+// allocations instead of malloc/free churn.
+sharp.cache({ memory: 200, files: 0, items: 200 });
+
 /**
  * Convert a single image buffer.
  *
@@ -36,14 +43,16 @@ async function convertImage(inputBuffer, opts) {
     throw new Error(`Unsupported target format: ${targetFormat}`);
   }
 
-  // Step 1: if HEIC/HEIF, decode to a PNG buffer first (sharp prebuilt
-  // binaries do not include HEIF support on Linux containers).
+  // Step 1: if HEIC/HEIF, decode to a JPEG buffer first (sharp prebuilt
+  // binaries do not include HEIF support on Linux containers). JPEG is
+  // ~10x smaller than PNG so the sharp re-encode below stays fast.
   let workingBuffer = inputBuffer;
   if (isHeic(originalName, mime)) {
     try {
       const decoded = await heicConvert({
         buffer: inputBuffer,
-        format: 'PNG'
+        format: 'JPEG',
+        quality: 0.92
       });
       workingBuffer = Buffer.from(decoded);
     } catch (err) {

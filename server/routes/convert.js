@@ -5,6 +5,7 @@ const multer = require('multer');
 const archiver = require('archiver');
 const path = require('path');
 const crypto = require('crypto');
+const os = require('os');
 
 const { convertImage } = require('../services/imageService');
 const {
@@ -121,39 +122,54 @@ router.post('/convert', (req, res) => {
     };
 
     const jobId = createJobId();
-    const results = [];
+    const results = new Array(files.length);
 
-    for (const f of files) {
-      try {
-        const { buffer, mime, ext } = await convertImage(f.buffer, {
-          ...opts,
-          originalName: f.originalname,
-          mime: f.mimetype
-        });
+    // Process files in parallel with a concurrency cap. HEIC decoding is
+    // CPU bound, so cap to the number of available cores (min 2, max 8) to
+    // avoid thrashing the event loop / memory.
+    const CONCURRENCY = Math.min(8, Math.max(2, os.cpus()?.length || 2));
+    let cursor = 0;
+    async function worker() {
+      while (true) {
+        const i = cursor++;
+        if (i >= files.length) return;
+        const f = files[i];
+        try {
+          const { buffer, mime, ext } = await convertImage(f.buffer, {
+            ...opts,
+            originalName: f.originalname,
+            mime: f.mimetype
+          });
 
-        const safeBase = sanitizeBaseName(f.originalname);
-        const outputName = `${safeBase}.${ext}`;
+          const safeBase = sanitizeBaseName(f.originalname);
+          const outputName = `${safeBase}.${ext}`;
 
-        results.push({
-          id: crypto.randomBytes(8).toString('hex'),
-          status: 'ok',
-          originalName: f.originalname,
-          originalSize: f.size,
-          outputName,
-          outputSize: buffer.length,
-          mime,
-          buffer
-        });
-      } catch (e) {
-        results.push({
-          id: crypto.randomBytes(8).toString('hex'),
-          status: 'error',
-          originalName: f.originalname,
-          originalSize: f.size,
-          error: (e && e.message) || 'Conversion failed.'
-        });
+          results[i] = {
+            id: crypto.randomBytes(8).toString('hex'),
+            status: 'ok',
+            originalName: f.originalname,
+            originalSize: f.size,
+            outputName,
+            outputSize: buffer.length,
+            mime,
+            buffer
+          };
+        } catch (e) {
+          results[i] = {
+            id: crypto.randomBytes(8).toString('hex'),
+            status: 'error',
+            originalName: f.originalname,
+            originalSize: f.size,
+            error: (e && e.message) || 'Conversion failed.'
+          };
+        }
+        // Free the original upload buffer ASAP to keep memory bounded
+        // when handling large batches.
+        f.buffer = null;
       }
     }
+
+    await Promise.all(Array.from({ length: CONCURRENCY }, worker));
 
     JOBS.set(jobId, { createdAt: Date.now(), results });
     scheduleJobCleanup(jobId);
