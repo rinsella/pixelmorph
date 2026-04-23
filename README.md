@@ -129,7 +129,7 @@ The container listens on `process.env.PORT` (default `8080`), so it works direct
 
 | Variable                | Required | Notes                                                            |
 | ----------------------- | -------- | ---------------------------------------------------------------- |
-| `NEXT_PUBLIC_SITE_URL`  | yes      | Your public canonical URL, e.g. `https://pixelmorph.app`. Used for OG, canonical, sitemap. |
+| `NEXT_PUBLIC_SITE_URL`  | yes      | Your public canonical URL, e.g. `https://pixelmorph.net`. Used for OG, canonical, sitemap. |
 | `PORT`                  | no       | Set automatically by Railway. Locally defaults to `3000`.        |
 | `NODE_ENV`              | no       | `production` by default in the Dockerfile.                       |
 

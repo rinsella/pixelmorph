@@ -23,10 +23,10 @@ export default function ContactPage() {
         <p className="text-sm text-ink-700">
           Email us at{' '}
           <a
-            href="mailto:hello@pixelmorph.app"
+            href="mailto:hello@pixelmorph.net"
             className="font-semibold text-brand-700 underline"
           >
-            hello@pixelmorph.app
+            hello@pixelmorph.net
           </a>
           .
         </p>
@@ -36,7 +36,7 @@ export default function ContactPage() {
       </div>
 
       <form
-        action="mailto:hello@pixelmorph.app"
+        action="mailto:hello@pixelmorph.net"
         method="post"
         encType="text/plain"
         className="mt-8 card p-6 space-y-4"
