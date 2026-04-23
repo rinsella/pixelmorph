@@ -51,7 +51,7 @@ export default function ConverterPage() {
         <div className="card p-5">
           <h2 className="font-semibold text-ink-900">Need bulk?</h2>
           <p className="mt-2">
-            Upload up to 25 files (25MB each) per batch and grab everything as a
+            Upload up to 1000 files (25MB each, 20GB total) per batch and grab everything as a
             single ZIP. See the{' '}
             <Link href="/supported-formats" className="text-brand-700 underline">
               full format matrix

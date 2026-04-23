@@ -4,8 +4,8 @@ const path = require('path');
 
 // Hard limits, keep Railway containers safe.
 const MAX_FILE_BYTES = 25 * 1024 * 1024; // 25 MB per file
-const MAX_FILES = 25;
-const MAX_TOTAL_BYTES = 150 * 1024 * 1024; // 150 MB per request
+const MAX_FILES = 1000;
+const MAX_TOTAL_BYTES = 20 * 1024 * 1024 * 1024; // 20 GB per request
 
 // Whitelisted output formats and their canonical extensions.
 const OUTPUT_FORMATS = {

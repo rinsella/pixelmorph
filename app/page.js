@@ -64,7 +64,7 @@ const FAQ_PREVIEW = [
   },
   {
     q: 'Can I convert multiple images at once?',
-    a: 'Yes, PixelMorph supports batch conversion of up to 25 images per request, with per-file status and a one-click ZIP download.'
+    a: 'Yes, PixelMorph supports batch conversion of up to 1000 images per request (20GB total), with per-file status and a one-click ZIP download.'
   },
   {
     q: 'Is my image quality preserved?',

@@ -17,7 +17,7 @@ const SECTIONS = [
   {
     title: 'Batch conversion with ZIP download',
     body:
-      'Drop up to 25 files at once. Each file shows its own status, and a single ZIP download bundles everything when you’re done.'
+      'Drop up to 1000 files at once (20GB total). Each file shows its own status, and a single ZIP download bundles everything when you’re done.'
   },
   {
     title: 'Quality retention',

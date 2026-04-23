@@ -3,8 +3,9 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
 
 const ACCEPT = '.jpg,.jpeg,.png,.webp,.heic,.heif,image/jpeg,image/png,image/webp,image/heic,image/heif';
-const MAX_FILES = 25;
+const MAX_FILES = 1000;
 const MAX_BYTES = 25 * 1024 * 1024;
+const MAX_TOTAL_BYTES = 20 * 1024 * 1024 * 1024;
 
 const FORMATS = [
   { value: 'jpg', label: 'JPG' },
@@ -198,7 +199,7 @@ export default function Converter({ defaultFormat = 'jpg' }) {
               </p>
             </div>
             <p className="text-xs text-ink-500">
-              Supports HEIC, HEIF, JPG, PNG, WEBP, up to {MAX_FILES} files, 25MB each.
+              Supports HEIC, HEIF, JPG, PNG, WEBP, up to {MAX_FILES} files (25MB each, 20GB total).
             </p>
           </div>
         </div>
