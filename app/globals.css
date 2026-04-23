@@ -1,0 +1,75 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #ffffff;
+  --fg: #0b1220;
+}
+
+html,
+body {
+  background-color: var(--bg);
+  color: var(--fg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+@layer components {
+  .container-tight {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-primary {
+    @apply btn bg-brand-600 text-white shadow-soft hover:bg-brand-700 active:bg-brand-800;
+  }
+  .btn-secondary {
+    @apply btn bg-white text-ink-900 ring-1 ring-gray-200 hover:ring-gray-300 hover:bg-gray-50;
+  }
+  .btn-ghost {
+    @apply btn text-ink-700 hover:bg-gray-100;
+  }
+  .card {
+    @apply rounded-2xl bg-white shadow-card ring-1 ring-gray-100;
+  }
+  .badge {
+    @apply inline-flex items-center gap-1 rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700 ring-1 ring-brand-100;
+  }
+  .h-display {
+    @apply text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-ink-900;
+  }
+  .h-section {
+    @apply text-2xl sm:text-3xl font-bold tracking-tight text-ink-900;
+  }
+  .prose-body {
+    @apply text-base leading-relaxed text-ink-700;
+  }
+}
+
+/* Drop zone styling */
+.dropzone {
+  @apply relative flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50/60 p-8 sm:p-12 text-center transition-colors;
+}
+.dropzone[data-active='true'] {
+  @apply border-brand-500 bg-brand-50/60;
+}
+
+/* Hide native file input but keep accessible */
+.sr-only-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
